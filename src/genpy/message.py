@@ -41,11 +41,17 @@ import math
 import itertools
 import struct
 import sys
+import yaml
 
 import genmsg
 
 from .base import is_simple
 from .rostime import Time, Duration, TVal
+
+try:
+    reload  # Python 2
+except NameError:  # Python 3
+    from importlib import reload
 
 # common struct pattern singletons for msgs to use. Although this
 # would better placed in a generator-specific module, we don't want to
@@ -106,10 +112,10 @@ def strify_message(val, indent='', time_offset=None, current_time=None, field_fi
     elif type_ in (int, long, float, bool):
         return str(val)
     elif isstring(val):
-        #TODO: need to escape strings correctly
         if not val:
             return "''"
-        return val
+        # escape strings for use in yaml file using yaml dump with default style to avoid trailing "...\n"
+        return yaml.dump(val, default_style='"').rstrip('\n')
     elif isinstance(val, TVal):
         
         if time_offset is not None and isinstance(val, Time):
@@ -130,8 +136,10 @@ def strify_message(val, indent='', time_offset=None, current_time=None, field_fi
         if type(val0) in (int, float) and fixed_numeric_width is not None:
             list_str = '[' + ''.join(strify_message(v, indent, time_offset, current_time, field_filter, fixed_numeric_width) + ', ' for v in val).rstrip(', ') + ']'
             return list_str
-        elif type(val0) in (int, float, str, bool):
-            # TODO: escape strings properly
+        elif isstring(val0):
+            # escape list of strings for use in yaml file using yaml dump
+            return yaml.dump(val).rstrip('\n')
+        elif type(val0) in (int, float, bool):
             return str(list(val))
         else:
             pref = indent + '- '
@@ -168,6 +176,8 @@ def _convert_getattr(val, f, t):
     attr = getattr(val, f)
     if isstring(attr) and 'uint8[' in t:
         return [ord(x) for x in attr]
+    elif isinstance(attr, bytes) and 'uint8[' in t:
+        return list(attr)
     else:
         return attr
 
@@ -223,7 +233,7 @@ def check_type(field_name, field_type, field_val):
             elif not type(field_val) == bytes:
                 raise SerializationError('field %s must be of type bytes or an ascii string'%field_name)
         else:		
-            if type(field_val) == unicode:
+            if type(field_val) == unicode:  # noqa: F821
                 raise SerializationError('field %s is a unicode string instead of an ascii string'%field_name)
             elif not isstring(field_val):
                 raise SerializationError('field %s must be of type str'%field_name)
