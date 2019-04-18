@@ -48,7 +48,7 @@ ros_package = PackageXml(os.path.join(os.path.dirname(__file__), 'package.xml'))
 
 setup(
     # based on package.xml
-    name='ros_' + ros_package.name(),
+    name='pyros_' + ros_package.name(),
     version=ros_package.version(),
     description=ros_package.description(),
     url=ros_package.url.filter('type', 'repository')(),
