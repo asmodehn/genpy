@@ -100,7 +100,7 @@ class MessageTest(unittest.TestCase):
         from genpy.message import fill_message_args
         from genpy import Message, MessageException
         
-        from genpy.msg import TestPrimitiveArray
+        from test.msg import TestPrimitiveArray
             
         class M1(Message):
             __slots__ = ['int']
@@ -151,7 +151,7 @@ class MessageTest(unittest.TestCase):
         except MessageException: pass
 
         # test fixed-size message arrays
-        from genpy.msg import TestMsgArray, TestString
+        from test.msg import TestMsgArray, TestString
         msg = TestMsgArray()
         fill_message_args(msg, [{}])
         assert msg == TestMsgArray()
@@ -182,7 +182,7 @@ class MessageTest(unittest.TestCase):
     def test_fill_message_args_embed_time(self):
         from genpy import Time
         from genpy.message import fill_message_args
-        from genpy.msg import TestFillEmbedTime
+        from test.msg import TestFillEmbedTime
 
         # test fill_message_args with embeds and time vals
         # time t
@@ -273,7 +273,7 @@ class MessageTest(unittest.TestCase):
             
     def test_fill_message_args_simple(self):
         from genpy.message import fill_message_args
-        from genpy.msg import TestFillSimple
+        from test.msg import TestFillSimple
         #int32 i32
         #string str
         #int32[] i32_array

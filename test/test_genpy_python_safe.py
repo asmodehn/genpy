@@ -7,7 +7,7 @@ class MessageTest(unittest.TestCase):
         # simple test for make_python_safe
         try:
             # this import will fail, if the data field "from" is not properly properly renames, since "from" is a reserved keyword in Python
-            from genpy.msg import TestPythonSafe
+            from test.msg import TestPythonSafe
         except Exception as e:
             #assert False, "should have raised"
             self.fail("failed to import message type 'TestPythonSafe':\n%s" % (traceback.format_exc()))
@@ -17,7 +17,7 @@ class MessageTest(unittest.TestCase):
         # regression test for https://github.com/ros/genpy/issues/68
         try:
             # this import will fail, if the make_python_safe function is not properly used on all subfields of the message
-            from genpy.msg import TestPythonSafeSubfields
+            from test.msg import TestPythonSafeSubfields
         except Exception as e:
             self.fail("failed to import message type 'TestPythonSafeSubfields':\n%s" % (traceback.format_exc()))
 

@@ -1,1 +1,1 @@
-genpy/TestPythonSafe[] def
+test/TestPythonSafe[] def

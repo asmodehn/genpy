@@ -3,21 +3,23 @@
 import os
 import sys
 
-pkg_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.join(pkg_path, 'src'))
+test_path = os.path.dirname(os.path.dirname(__file__))
+# allowing to run from source
+sourcepath = os.path.join(os.path.dirname(test_path), 'src')
+sys.path.insert(0, sourcepath)
 
 from genpy.generator import MsgGenerator  # noqa
 from genpy.genpy_main import genmain  # noqa
 
 
 def generate_test_messages(msg_files):
-    test_msg_path = os.path.join(pkg_path, 'test/msg')
+    test_msg_path = os.path.join(test_path, 'msg')
     msg_files = []
     for filename in os.listdir(test_msg_path):
         if filename.endswith('.msg'):
             msg_files.append(filename)
 
-    src_msg_path = os.path.join(pkg_path, 'src/genpy/msg')
+    src_msg_path = os.path.join(test_path, 'msg')
     if not os.path.exists(src_msg_path):
         os.makedirs(src_msg_path)
 
@@ -28,10 +30,10 @@ def generate_test_messages(msg_files):
     for msg_file in msg_files:
         argv = [
             'genmsg_py.py',
-            '-p', 'genpy',
-            '-Igenpy:%s/test/msg' % pkg_path,
-            '-o', '%s/src/genpy/msg' % pkg_path,
-            '%s/test/msg/%s' % (pkg_path, msg_file),
+            '-p', 'test',
+            '-Itest:%s/msg' % test_path,
+            '-o', '%s/msg' % test_path,
+            '%s/msg/%s' % (test_path, msg_file),
         ]
         try:
             genmain(argv, 'genmsg_py.py', MsgGenerator())

@@ -1,5 +1,5 @@
 time t
 duration d
-genpy/TestString str_msg
-genpy/TestString[] str_msg_array
+test/TestString str_msg
+test/TestString[] str_msg_array
 int32 i32

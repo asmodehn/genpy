@@ -58,6 +58,7 @@ setup(
     # based on directory hierarchy
     packages=['genpy'],
     package_dir={'': 'src'},
+    install_requires=['pyros_genmsg'],
     test_requires=['pyyaml'],
 )
 
